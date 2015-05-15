@@ -2,14 +2,9 @@ package com.aram.gol
 
 import static grails.async.Promises.task
 import static grails.async.Promises.waitAll
-import javax.annotation.PreDestroy
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class GameService {
     static transactional = false
-
-    private ExecutorService threadPool = Executors.newFixedThreadPool(4);
 
     public Board nextStep(Board initialBoard) {
         Board resultBoard = BoardFactory.newBoard(initialBoard)
@@ -59,10 +54,5 @@ class GameService {
 
     private Boolean cellNextValueForDead(byte neighbours) {
         return neighbours == 3;
-    }
-
-    @PreDestroy
-    public void cleanUp() throws Exception {
-        threadPool.shutdown()
     }
 }
