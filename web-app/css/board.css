@@ -1,0 +1,16 @@
+.gameTable {
+    border: 1px;
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+
+td {
+    width: 5px;
+    height: 5px;
+    border: solid 1px;
+    padding: 0px 0 0 0;
+}
+
+.alive{
+    background-color: #0055BB;
+}

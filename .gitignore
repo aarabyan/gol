@@ -1,0 +1,11 @@
+.idea/
+.classpath
+.project
+.directory
+target/
+out/
+lib/build/
+*.iws
+*.iml
+*.ipr
+stacktrace.log
