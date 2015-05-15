@@ -1,10 +1,10 @@
 package com.aram.gol
 
+import static grails.async.Promises.task
+import static grails.async.Promises.waitAll
 import javax.annotation.PreDestroy
-import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
 
 class GameService {
     static transactional = false
@@ -14,24 +14,21 @@ class GameService {
     public Board nextStep(Board initialBoard) {
         Board resultBoard = BoardFactory.newBoard(initialBoard)
 
-        for (int rowIdx = 0; rowIdx < initialBoard.rows; rowIdx++) {
-            for (int colIdx = 0; colIdx < initialBoard.columns; colIdx++) {
-
-                //todo optimze ...
-                Future results = threadPool.submit(new Callable() {
-                    Boolean call() throws Exception {
-                        return cellNextValue(initialBoard, rowIdx, colIdx)
+        def tasks = []
+        for (final int row = 0; row < initialBoard.rows; row++) {
+            final rowIdx = row
+            tasks << task {
+                for (int col = 0; col < initialBoard.columns; col++) {
+                    if (cellNextValue(initialBoard, rowIdx, col)) {
+                        resultBoard.setAlive(rowIdx, col)
+                    } else {
+                        resultBoard.setDead(rowIdx, col)
                     }
-                })
-
-                if (results.get()) {
-                    resultBoard.setAlive(rowIdx, colIdx)
-                } else {
-                    resultBoard.setDead(rowIdx, colIdx)
                 }
-
             }
         }
+
+        waitAll(tasks)
         return resultBoard
     }
 
