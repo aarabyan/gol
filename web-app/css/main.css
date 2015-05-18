@@ -95,6 +95,7 @@ img {
 }
 
 .content {
+    overflow: auto;
 }
 
 .content h1 {
